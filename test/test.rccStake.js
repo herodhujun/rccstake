@@ -10,7 +10,9 @@ describe("rccStake test", function () {
      // await deployments.fixture(["RCCStake"])
      firstAccount = (await getNamedAccounts()).firstAccount
      secondAccount = (await getNamedAccounts()).secondAccount
-
+     const startBlockOffset = 10; // Start staking 10 blocks after deployment
+     const endBlockOffset = 1000; // End staking at block number + 1000
+     const RCCPerBlock = ethers.parseEther("10"); // 10 RCC per block
      //  部署获取到的Rcc Token 地址
    await deployments.fixture(["RccToken"])
     const RccToken =await deployments.get("RccToken")
@@ -21,10 +23,11 @@ describe("rccStake test", function () {
     const endBlock = 9529999;
     // 每个区块奖励的Rcc token的数量
     const RccPerBlock = "20000000000000000";
+    const currentBlock = await ethers.provider.getBlockNumber();
     const Stake = await hre.ethers.getContractFactory("RCCStake");
     rccStakeProxy = await upgrades.deployProxy(
         Stake,
-        [RccToken.address, startBlock, endBlock, RccPerBlock],
+        [RccToken.address, currentBlock + startBlockOffset, currentBlock + endBlockOffset, RccPerBlock],
         { initializer: "initialize" }
       );
       await rccStakeProxy.waitForDeployment()

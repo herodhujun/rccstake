@@ -2,23 +2,23 @@ const { ethers, upgrades } = require("hardhat");
 module.exports= async ({getNamedAccounts,deployments})=>{
     const {firstAccount} =await getNamedAccounts()
     const {deploy} = deployments
-     //  部署获取到的Rcc Token 地址
+    //部署获取到的Rcc Token 地址
     const RccToken =await deployments.get("RccToken")
-    // 质押起始区块高度,可以去sepolia上面读取最新的区块高度
-    const startBlock = 6529999;
+   // 获取当前区块号
+   
+    const currentBlock = await ethers.provider.getBlockNumber();
+    console.log(`currentBlock is ${currentBlock}`)
+    const startBlockOffset = 10;
     // 质押结束的区块高度,sepolia 出块时间是12s,想要质押合约运行x秒,那么endBlock = startBlock+x/12
-    const endBlock = 9529999;
+    //改为偏移量具体合约运行时间 (endBlockOffset - startBlockOffset)/12
+    const endBlockOffset = 1000;
     // 每个区块奖励的Rcc token的数量
-    const RccPerBlock = "20000000000000000";
-    // const rccToken = await deploy("RCCStake",{
-    //     from:firstAccount,
-    //     args:[RccToken.address, startBlock, endBlock, RccPerBlock],
-    //     log:true
-    // })
+    // const RccPerBlock = "20000000000000000";
+    const RccPerBlock = ethers.parseEther("10"); // 10 RCC per block
     const Stake = await hre.ethers.getContractFactory("RCCStake");
     const s = await upgrades.deployProxy(
         Stake,
-        [RccToken.address, startBlock, endBlock, RccPerBlock],
+        [RccToken.address, currentBlock + startBlockOffset, currentBlock + endBlockOffset, RccPerBlock],
         { initializer: "initialize" }
       );
       //await box.deployed();
