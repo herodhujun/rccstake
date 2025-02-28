@@ -297,7 +297,7 @@ contract RCCStake is
             stTokenAddress: _stTokenAddress,
             poolWeight: _poolWeight,
             lastRewardBlock: lastRewardBlock,
-            accRCCPerST: 0,
+            accRCCPerST: 1,
             stTokenAmount: 0,
             minDepositAmount: _minDepositAmount,
             unstakeLockedBlocks: _unstakeLockedBlocks

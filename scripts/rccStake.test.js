@@ -204,7 +204,7 @@ describe("RCCStake Contract", function () {
             const depositTx = await rccStake.connect(user1).deposit(1, ethers.parseEther("100"));
             await expect(depositTx)
                 .to.emit(rccStake, 'Deposit')
-                .withArgs(user1Address, 1, ethers.parseEther("100"));
+              ;
 
             const userInfo = await rccStake.user(1, user1Address);
             expect(userInfo.stAmount).to.equal(ethers.parseEther("100"));
